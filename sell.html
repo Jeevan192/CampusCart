@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Sell Item - CampusCart</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-left">
+      <a class="brand" href="index.html" aria-label="CampusCart Home">
+        <span class="logo-mark" aria-hidden="true"></span>
+        <h1 class="logo">CampusCart</h1>
+      </a>
+    </div>
+
+    <div class="nav-links">
+      <button id="themeToggle" class="btn btn-ghost" type="button" aria-label="Toggle theme">🌙</button>
+      <a href="index.html">Home</a>
+      <a href="wishlist.html">Wishlist</a>
+      <a href="profile.html">Profile</a>
+      <button id="logoutBtn" class="btn btn-ghost" type="button">Logout</button>
+    </div>
+  </nav>
+
+  <main class="page">
+    <section class="panel">
+      <div class="panel-head">
+        <div>
+          <h2 class="panel-title">Sell an Item</h2>
+          <p class="muted">Add your listing with seller details so buyers can contact you.</p>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <form id="sellForm" class="form" novalidate>
+        <div class="form-grid-2">
+          <label class="field">
+            <span>Seller Name</span>
+            <input type="text" id="sellerName" placeholder="e.g., Manideep" required />
+          </label>
+
+          <label class="field">
+            <span>Seller Contact (Phone / WhatsApp)</span>
+            <input type="tel" id="sellerContact" placeholder="e.g., +91 9XXXXXXXXX" required />
+          </label>
+        </div>
+
+        <label class="field">
+          <span>Product Title</span>
+          <input type="text" id="title" placeholder="e.g., 1st Year Chemistry Notes" required />
+        </label>
+
+        <div class="form-grid-2">
+          <label class="field">
+            <span>Price (₹)</span>
+            <input type="number" id="price" placeholder="e.g., 150" min="0" inputmode="numeric" required />
+          </label>
+
+          <label class="field">
+            <span>Category</span>
+            <select id="category" required>
+              <option value="">Select Category</option>
+              <option value="Notes">Notes</option>
+              <option value="Aprons">Aprons</option>
+              <option value="Stationery">Stationery</option>
+              <option value="Others">Others</option>
+            </select>
+          </label>
+        </div>
+
+        <label class="field">
+          <span>Image URL (optional)</span>
+          <input type="url" id="image" placeholder="https://..." />
+        </label>
+
+        <div class="form-actions">
+          <button class="btn btn-primary" type="submit">Add Product</button>
+          <a class="btn btn-secondary" href="index.html">Cancel</a>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <script src="js/theme.js"></script>
+  <script src="js/sell.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

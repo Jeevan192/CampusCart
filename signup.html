@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Sign Up - CampusCart</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body class="auth-body">
+  <nav class="navbar">
+    <div class="nav-left">
+      <a class="brand" href="index.html" aria-label="CampusCart Home">
+        <span class="logo-mark" aria-hidden="true"></span>
+        <h1 class="logo">CampusCart</h1>
+      </a>
+    </div>
+    <div class="nav-links">
+      <button id="themeToggle" class="btn btn-ghost" type="button" aria-label="Toggle theme">🌙</button>
+      <a href="login.html">Login</a>
+    </div>
+  </nav>
+
+  <main class="auth-shell">
+    <section class="auth-card">
+      <header class="auth-head">
+        <h2>Create your account</h2>
+        <p class="muted">Use your college email to get started.</p>
+      </header>
+
+      <form id="signupForm" class="auth-form" novalidate>
+        <label class="field">
+          <span>Name</span>
+          <input type="text" id="name" placeholder="Your name" autocomplete="name" required />
+        </label>
+
+        <label class="field">
+          <span>College Email</span>
+          <input type="email" id="email" placeholder="name@college.edu" autocomplete="email" required />
+        </label>
+
+        <label class="field">
+          <span>Password</span>
+          <div class="password-wrap">
+            <input type="password" id="password" placeholder="At least 6 characters" minlength="6" autocomplete="new-password" required />
+            <button class="icon-btn" id="toggleSignupPassword" type="button" aria-label="Toggle password visibility">👁</button>
+          </div>
+        </label>
+
+        <button class="btn btn-primary" type="submit">Create Account</button>
+
+        <p class="muted small">
+          Already have an account? <a href="login.html">Login</a>
+        </p>
+      </form>
+    </section>
+  </main>
+
+  <script src="js/theme.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+</html>

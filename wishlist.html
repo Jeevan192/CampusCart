@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Wishlist - CampusCart</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-left">
+      <a class="brand" href="index.html" aria-label="CampusCart Home">
+        <span class="logo-mark" aria-hidden="true"></span>
+        <h1 class="logo">CampusCart</h1>
+      </a>
+    </div>
+
+    <div class="nav-links">
+      <button id="themeToggle" class="btn btn-ghost" type="button" aria-label="Toggle theme">🌙</button>
+      <a href="index.html">Home</a>
+      <a href="sell.html">Sell</a>
+      <a href="profile.html">Profile</a>
+      <button id="logoutBtn" class="btn btn-ghost" type="button">Logout</button>
+    </div>
+  </nav>
+
+  <main class="page">
+    <section class="products">
+      <div class="section-head">
+        <h2>Your Wishlist</h2>
+        <p class="muted">Items you’ve saved.</p>
+      </div>
+      <div class="product-grid" id="wishlistGrid"></div>
+    </section>
+  </main>
+
+  <script src="js/theme.js"></script>
+  <script src="js/wishlist.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

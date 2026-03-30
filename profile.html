@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Profile - CampusCart</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-left">
+      <a class="brand" href="index.html" aria-label="CampusCart Home">
+        <span class="logo-mark" aria-hidden="true"></span>
+        <h1 class="logo">CampusCart</h1>
+      </a>
+    </div>
+
+    <div class="nav-links">
+      <button id="themeToggle" class="btn btn-ghost" type="button" aria-label="Toggle theme">🌙</button>
+      <a href="index.html">Home</a>
+      <a href="sell.html">Sell</a>
+      <a href="wishlist.html">Wishlist</a>
+      <button id="logoutBtn" class="btn btn-ghost" type="button">Logout</button>
+    </div>
+  </nav>
+
+  <main class="page">
+    <section class="panel">
+      <div class="panel-head">
+        <div>
+          <h2 class="panel-title">My Profile</h2>
+          <p class="muted" id="profileMeta">Loading…</p>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="panel-head">
+        <div>
+          <h3 class="panel-subtitle">My Listings</h3>
+          <p class="muted">Manage items you posted.</p>
+        </div>
+        <a class="btn btn-secondary" href="sell.html">Add new</a>
+      </div>
+
+      <div class="product-grid" id="myListings"></div>
+    </section>
+  </main>
+
+  <script src="js/theme.js"></script>
+  <script src="js/profile.js"></script>
+</body>
+</html>

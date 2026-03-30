@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CampusCart</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-left">
+      <a class="brand" href="index.html" aria-label="CampusCart Home">
+        <span class="logo-mark" aria-hidden="true"></span>
+        <h1 class="logo">CampusCart</h1>
+      </a>
+    </div>
+
+    <div class="nav-center">
+      <div class="search-wrap">
+        <input type="text" placeholder="Search for notes, aprons..." class="search-bar" aria-label="Search products" />
+        <span class="search-icon" aria-hidden="true">⌕</span>
+      </div>
+    </div>
+
+    <div class="nav-links">
+      <button id="themeToggle" class="btn btn-ghost" type="button" aria-label="Toggle theme">🌙</button>
+      <a href="sell.html">Sell</a>
+      <a href="wishlist.html">Wishlist</a>
+      <a href="profile.html">Profile</a>
+      <button id="logoutBtn" class="btn btn-ghost" type="button">Logout</button>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-copy">
+        <span class="pill">Campus-only marketplace</span>
+        <h2>Buy & Sell Essentials Within Your Campus</h2>
+        <p>Notes, Aprons, Books & more — premium experience for freshers.</p>
+
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="sell.html">Sell an item</a>
+          <a class="btn btn-secondary" href="#featured">Browse items</a>
+        </div>
+
+        <div class="hero-stats" aria-label="Highlights">
+          <div class="stat">
+            <div class="stat-num">Fast</div>
+            <div class="stat-label">Local pickups</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">Safe</div>
+            <div class="stat-label">Campus peers</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">Smart</div>
+            <div class="stat-label">Filter & wishlist</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-card" aria-label="Featured preview">
+        <div class="hero-card-top">
+          <div class="hero-card-badge">Trending</div>
+          <div class="hero-card-title">Engineering Drawing Apron</div>
+          <div class="hero-card-price">₹150</div>
+        </div>
+        <div class="hero-card-grid">
+          <div class="mini-tile">📚 Notes</div>
+          <div class="mini-tile">🧥 Aprons</div>
+          <div class="mini-tile">📝 Stationery</div>
+          <div class="mini-tile">📦 Others</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="categories">
+    <button class="category" type="button" data-category="Notes">📚 Notes</button>
+    <button class="category" type="button" data-category="Aprons">🧥 Aprons</button>
+    <button class="category" type="button" data-category="Stationery">📝 Stationery</button>
+    <button class="category" type="button" data-category="Others">📦 Others</button>
+  </section>
+
+  <section class="filters">
+    <select id="categoryFilter" aria-label="Filter by category">
+      <option value="all">All Categories</option>
+      <option value="Notes">Notes</option>
+      <option value="Aprons">Aprons</option>
+      <option value="Stationery">Stationery</option>
+      <option value="Others">Others</option>
+    </select>
+
+    <input type="number" id="priceFilter" placeholder="Max Price (₹)" min="0" inputmode="numeric" aria-label="Filter by max price" />
+
+    <button id="clearFilters" class="btn btn-ghost" type="button">Clear</button>
+  </section>
+
+  <section class="products" id="featured">
+    <div class="section-head">
+      <h2>Featured Items</h2>
+      <p class="muted">Tap a card to view details. Use the heart to wishlist.</p>
+    </div>
+
+    <div class="product-grid" id="productGrid"></div>
+  </section>
+
+  <footer>
+    <p>© 2026 CampusCart | Built for Students</p>
+  </footer>
+
+  <script src="js/theme.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
