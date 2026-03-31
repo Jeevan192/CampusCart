@@ -27,7 +27,7 @@ const IS_VERCEL = process.env.VERCEL === "1";
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname)));
+app.use(express.static(path.join(__dirname), { index: false }));
 
 const allowedDomains = (process.env.ALLOWED_DOMAINS || "college.edu,university.edu")
   .split(",")
