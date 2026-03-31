@@ -31,6 +31,7 @@ Notes
 
 - In-memory MongoDB fallback is for local development only.
 - On Vercel, a real cloud MongoDB URI is required.
+- If only landing page loads after deploy, redeploy after confirming vercel.json includeFiles keeps all *.html/*.css/*.js assets bundled.
 
 Implemented technical USP features
 
