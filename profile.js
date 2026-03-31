@@ -1,19 +1,13 @@
 (() => {
+  const api = window.CampusCartAPI;
+  if (!api) return;
+
   const grid = document.getElementById("myListings");
   const meta = document.getElementById("profileMeta");
 
-  const safeJSON = (value, fallback) => {
-    try {
-      return value ? JSON.parse(value) : fallback;
-    } catch {
-      return fallback;
-    }
-  };
+  const user = api.getUser();
+  const loggedIn = Boolean(api.getToken());
 
-  const user = safeJSON(localStorage.getItem("user"), null);
-  const loggedIn = localStorage.getItem("loggedIn") === "true";
-
-  // Redirect if not logged in
   if (!user || !loggedIn) {
     alert("Please login first!");
     window.location.href = "login.html";
@@ -26,15 +20,13 @@
   const logoutBtn = document.getElementById("logoutBtn");
   if (logoutBtn) {
     logoutBtn.addEventListener("click", () => {
-      localStorage.removeItem("loggedIn");
+      api.clearSession();
       alert("Logged out!");
       window.location.href = "login.html";
     });
   }
 
-  // Get only user's products
-  let allProducts = safeJSON(localStorage.getItem("products"), []);
-  let products = allProducts.filter((p) => p.owner === user.email);
+  let products = [];
 
   function displayProducts() {
     if (!grid) return;
@@ -53,44 +45,50 @@
       const price = Number.isFinite(Number(p.price)) ? Number(p.price) : 0;
       const image = p.image || "https://via.placeholder.com/600x400?text=CampusCart";
       const category = p.category || "Others";
+      const typeMeta = p.listingType === "rent" ? `Rent • ₹${Number(p.rentalPricePerDay || 0)}/day` : "Sale";
 
       card.innerHTML = `
         <img src="${image}" alt="${title}">
         <h3>${title}</h3>
         <p class="muted small" style="margin:0 0 6px;">${category}</p>
+        <p class="muted small" style="margin:0 0 6px;">${typeMeta}</p>
         <p class="price">₹${price}</p>
         <button class="delete-btn" type="button">Delete</button>
       `;
 
       card.addEventListener("click", () => {
-        localStorage.setItem("selectedProduct", JSON.stringify(p));
+        localStorage.setItem("selectedProductId", String(p._id));
         window.location.href = "product.html";
       });
 
-      card.querySelector(".delete-btn").addEventListener("click", (e) => {
+      card.querySelector(".delete-btn").addEventListener("click", async (e) => {
         e.stopPropagation();
 
         const confirmDelete = confirm("Are you sure you want to delete this product?");
         if (!confirmDelete) return;
 
-        // Remove by stable key (owner + title + price + category)
-        allProducts = allProducts.filter((item) => {
-          return !(
-            item.owner === p.owner &&
-            item.title === p.title &&
-            Number(item.price) === Number(p.price) &&
-            item.category === p.category
-          );
-        });
-
-        localStorage.setItem("products", JSON.stringify(allProducts));
-        products = allProducts.filter((item) => item.owner === user.email);
-        displayProducts();
+        try {
+          await api.request(`/listings/${p._id}`, { method: "DELETE" });
+          products = products.filter((x) => String(x._id) !== String(p._id));
+          displayProducts();
+        } catch (error) {
+          alert(error.message || "Failed to delete listing");
+        }
       });
 
       grid.appendChild(card);
     });
   }
 
-  displayProducts();
+  (async () => {
+    try {
+      const response = await api.request("/listings/mine");
+      products = response.items || [];
+      displayProducts();
+    } catch (error) {
+      if (grid) {
+        grid.innerHTML = `<div class="panel" style="grid-column:1/-1;"><p class="muted" style="margin:0;">${error.message || "Could not load listings"}</p></div>`;
+      }
+    }
+  })();
 })();

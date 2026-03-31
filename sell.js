@@ -1,28 +1,19 @@
 (() => {
+  const api = window.CampusCartAPI;
+  if (!api) return;
+
   const form = document.getElementById("sellForm");
   if (!form) return;
 
-  const safeJSON = (value, fallback) => {
-    try {
-      return value ? JSON.parse(value) : fallback;
-    } catch {
-      return fallback;
-    }
-  };
-
   const normalizePhone = (raw) => String(raw || "").replace(/\s+/g, " ").trim();
 
-  // Pre-fill seller fields from signed-in user (if available)
-  const user = safeJSON(localStorage.getItem("user"), null);
-  const loggedIn = localStorage.getItem("loggedIn") === "true";
+  const user = api.getUser();
+  const loggedIn = Boolean(api.getToken());
   const sellerNameInput = document.getElementById("sellerName");
   if (user?.name && sellerNameInput) sellerNameInput.value = user.name;
 
-  form.addEventListener("submit", (e) => {
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
-
-    const user = safeJSON(localStorage.getItem("user"), null);
-    const loggedIn = localStorage.getItem("loggedIn") === "true";
 
     if (!user || !loggedIn) {
       alert("Please login first!");
@@ -37,6 +28,9 @@
     const priceRaw = document.getElementById("price")?.value;
     const category = document.getElementById("category")?.value;
     const image = document.getElementById("image")?.value?.trim();
+    const listingType = document.getElementById("listingType")?.value || "sale";
+    const rentalPricePerDay = Number(document.getElementById("rentalPricePerDay")?.value || 0);
+    const availabilityNote = document.getElementById("availabilityNote")?.value?.trim() || "";
 
     const price = Number(priceRaw);
 
@@ -50,26 +44,37 @@
       return;
     }
 
-    const newProduct = {
-      title,
-      price: Math.round(price),
-      category,
-      image: image || "https://via.placeholder.com/600x400?text=CampusCart",
-      owner: user.email,
+    try {
+      await api.request("/listings", {
+        method: "POST",
+        body: JSON.stringify({
+          title,
+          price: Math.round(price),
+          category,
+          image: image || "https://via.placeholder.com/600x400?text=CampusCart",
+          sellerContact,
+          listingType,
+          rentalPricePerDay,
+          availabilityNote
+        })
+      });
 
-      // Seller info (shown to buyers)
-      seller: {
-        name: sellerName,
-        contact: sellerContact,
-        email: user.email
-      }
-    };
+      // Keep demand engine warm with inferred intent when users list items.
+      await api.request("/buy-requests", {
+        method: "POST",
+        body: JSON.stringify({
+          title,
+          category,
+          maxBudget: Math.round(price),
+          department: "General",
+          semester: "Any"
+        })
+      });
 
-    const storedProducts = safeJSON(localStorage.getItem("products"), []);
-    storedProducts.push(newProduct);
-    localStorage.setItem("products", JSON.stringify(storedProducts));
-
-    alert("Product added successfully!");
-    window.location.href = "index.html";
+      alert("Product added successfully!");
+      window.location.href = "index.html";
+    } catch (error) {
+      alert(error.message || "Could not add product");
+    }
   });
 })();

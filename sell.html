@@ -9,9 +9,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="styles.css" />
 </head>
-<body>
+<body class="page-sell">
   <nav class="navbar">
     <div class="nav-left">
       <a class="brand" href="index.html" aria-label="CampusCart Home">
@@ -60,6 +60,21 @@
 
         <div class="form-grid-2">
           <label class="field">
+            <span>Listing Type</span>
+            <select id="listingType" required>
+              <option value="sale">Sale</option>
+              <option value="rent">Rent</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span>Rental Price / Day (₹, if rent)</span>
+            <input type="number" id="rentalPricePerDay" placeholder="e.g., 40" min="0" inputmode="numeric" />
+          </label>
+        </div>
+
+        <div class="form-grid-2">
+          <label class="field">
             <span>Price (₹)</span>
             <input type="number" id="price" placeholder="e.g., 150" min="0" inputmode="numeric" required />
           </label>
@@ -77,6 +92,11 @@
         </div>
 
         <label class="field">
+          <span>Availability Note (optional)</span>
+          <input type="text" id="availabilityNote" placeholder="e.g., Available after 4 PM near Hostel Gate" />
+        </label>
+
+        <label class="field">
           <span>Image URL (optional)</span>
           <input type="url" id="image" placeholder="https://..." />
         </label>
@@ -89,8 +109,9 @@
     </section>
   </main>
 
-  <script src="js/theme.js"></script>
-  <script src="js/sell.js"></script>
-  <script src="js/main.js"></script>
+  <script src="theme.js"></script>
+  <script src="api.js"></script>
+  <script src="sell.js"></script>
+  <script src="main.js"></script>
 </body>
 </html>

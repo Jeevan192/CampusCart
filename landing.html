@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CampusCart | Campus Marketplace</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+
+  <style>
+    :root {
+      --land-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      --land-ink: #0b1220;
+      --land-ink-soft: #45556f;
+      --land-bg: #f3f6fb;
+      --land-panel: rgba(255, 255, 255, 0.72);
+      --land-line: rgba(15, 23, 42, 0.12);
+      --land-console: #0b1325;
+      --land-console-2: #101b33;
+      --land-code: #dbe6ff;
+      --land-glow-a: rgba(37, 99, 235, 0.22);
+      --land-glow-b: rgba(124, 58, 237, 0.22);
+      --land-glow-c: rgba(22, 163, 74, 0.18);
+    }
+
+    [data-theme="dark"] {
+      --land-ink: #e8ecf7;
+      --land-ink-soft: #9cabbe;
+      --land-bg: #070b14;
+      --land-panel: rgba(11, 18, 31, 0.74);
+      --land-line: rgba(148, 163, 184, 0.24);
+      --land-console: #090f1d;
+      --land-console-2: #0f1830;
+      --land-code: #d6e2ff;
+      --land-glow-a: rgba(37, 99, 235, 0.26);
+      --land-glow-b: rgba(124, 58, 237, 0.24);
+      --land-glow-c: rgba(22, 163, 74, 0.16);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: "Poppins", system-ui, -apple-system, Segoe UI, sans-serif;
+      color: var(--land-ink);
+      background:
+        radial-gradient(1200px 540px at -8% -8%, var(--land-glow-b), transparent 58%),
+        radial-gradient(900px 500px at 100% -10%, var(--land-glow-a), transparent 60%),
+        radial-gradient(900px 500px at 50% 120%, var(--land-glow-c), transparent 62%),
+        linear-gradient(to bottom, var(--land-bg), color-mix(in srgb, var(--land-bg) 82%, #000 18%));
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    .grid-overlay {
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(148, 163, 184, 0.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(148, 163, 184, 0.07) 1px, transparent 1px);
+      background-size: 46px 46px;
+      mask-image: radial-gradient(circle at 50% 0%, #000 36%, transparent 82%);
+      pointer-events: none;
+      z-index: 0;
+      animation: gridSlide 28s linear infinite;
+    }
+
+    .aurora {
+      position: fixed;
+      inset: -20% -10% auto -10%;
+      height: 60vh;
+      pointer-events: none;
+      z-index: 0;
+      filter: blur(26px);
+      opacity: 0.55;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(124, 58, 237, 0.35), transparent 45%),
+        radial-gradient(circle at 80% 15%, rgba(37, 99, 235, 0.4), transparent 45%),
+        radial-gradient(circle at 55% 40%, rgba(22, 163, 74, 0.22), transparent 45%);
+      animation: auroraFloat 16s ease-in-out infinite alternate;
+    }
+
+    .top-nav {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 20px;
+      border-bottom: 1px solid var(--land-line);
+      background: color-mix(in srgb, var(--land-panel) 85%, transparent);
+      backdrop-filter: blur(14px);
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--land-ink);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-dot {
+      width: 15px;
+      height: 15px;
+      border-radius: 999px;
+      background: linear-gradient(130deg, var(--brand), var(--brand2));
+      box-shadow: 0 0 0 6px color-mix(in srgb, var(--brand) 20%, transparent);
+      animation: pulseDot 2.3s ease-in-out infinite;
+    }
+
+    .top-links {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip,
+    .chip-btn {
+      border: 1px solid var(--land-line);
+      border-radius: 999px;
+      padding: 8px 12px;
+      text-decoration: none;
+      color: var(--land-ink-soft);
+      background: transparent;
+      font-size: 13px;
+      font-weight: 700;
+      transition: .22s cubic-bezier(.16,1,.3,1);
+      cursor: pointer;
+    }
+
+    .chip:hover,
+    .chip-btn:hover {
+      transform: translateY(-1px);
+      color: var(--land-ink);
+      border-color: color-mix(in srgb, var(--brand) 45%, var(--land-line));
+      background: color-mix(in srgb, var(--brand) 10%, transparent);
+    }
+
+    .chip.primary {
+      color: #f8fafc;
+      border-color: transparent;
+      background: linear-gradient(130deg, var(--brand), var(--brand2));
+      box-shadow: 0 12px 24px color-mix(in srgb, var(--brand) 35%, transparent);
+    }
+
+    .hero {
+      position: relative;
+      z-index: 1;
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 28px 20px 10px;
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .hero-copy {
+      padding: 18px;
+      border: 1px solid var(--land-line);
+      border-radius: 18px;
+      background:
+        radial-gradient(360px 200px at 88% 10%, color-mix(in srgb, var(--brand) 14%, transparent), transparent 72%),
+        color-mix(in srgb, var(--land-panel) 92%, transparent);
+      box-shadow: 0 14px 28px rgba(2, 6, 23, 0.16);
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      border: 1px solid var(--land-line);
+      border-radius: 999px;
+      padding: 7px 11px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--land-ink-soft);
+      background: color-mix(in srgb, var(--land-panel) 85%, transparent);
+      animation: fadeIn .55s ease both;
+    }
+
+    .pinwheel {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: conic-gradient(from 0deg, var(--brand), var(--brand2), var(--accent), var(--brand));
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--brand) 15%, transparent);
+      animation: spin .95s linear infinite;
+    }
+
+    .hero h1 {
+      margin: 14px 0 10px;
+      max-width: 15ch;
+      font-size: clamp(1.9rem, 4.2vw, 3.25rem);
+      line-height: 1.04;
+      letter-spacing: -0.03em;
+      animation: riseIn .7s ease .08s both;
+    }
+
+    .hero p {
+      margin: 0;
+      max-width: 56ch;
+      color: var(--land-ink-soft);
+      line-height: 1.64;
+      animation: riseIn .7s ease .18s both;
+    }
+
+    .hero-actions {
+      margin-top: 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      animation: riseIn .7s ease .28s both;
+    }
+
+    .query-box {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      max-width: 660px;
+      border: 1px solid var(--land-line);
+      border-radius: 14px;
+      padding: 8px;
+      background: color-mix(in srgb, var(--land-panel) 88%, transparent);
+      animation: riseIn .7s ease .38s both;
+    }
+
+    .query-box input {
+      border: 0;
+      outline: none;
+      background: transparent;
+      color: var(--land-ink);
+      font-family: inherit;
+      font-size: 15px;
+      padding: 10px;
+    }
+
+    .query-box input::placeholder { color: var(--land-ink-soft); }
+
+    .hero-console {
+      border: 1px solid var(--land-line);
+      border-radius: 18px;
+      overflow: hidden;
+      background: var(--land-console);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
+      animation: riseIn .8s ease .2s both;
+    }
+
+    .console-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(148,163,184,.24);
+      background: var(--land-console-2);
+    }
+
+    .dots { display: inline-flex; gap: 6px; }
+    .dots i { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+    .dots i:nth-child(1){ background:#fb7185; }
+    .dots i:nth-child(2){ background:#fbbf24; }
+    .dots i:nth-child(3){ background:#34d399; }
+
+    .console-title {
+      font-family: var(--land-mono);
+      font-size: 12px;
+      color: #a3b8d9;
+    }
+
+    .hero-console pre {
+      margin: 0;
+      padding: 13px;
+      font-family: var(--land-mono);
+      font-size: 12.7px;
+      line-height: 1.58;
+      white-space: pre-wrap;
+      color: var(--land-code);
+    }
+
+    .k { color: #7dd3fc; }
+    .v { color: #86efac; }
+    .s { color: #c4b5fd; }
+
+    .console-foot {
+      margin: 0 13px 13px;
+      border: 1px solid rgba(148,163,184,.3);
+      border-radius: 999px;
+      padding: 7px 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #9cc0e8;
+      font-size: 12px;
+      font-family: var(--land-mono);
+    }
+
+    .console-foot i {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: blink 1.05s ease-in-out infinite;
+    }
+
+    .ticker {
+      position: relative;
+      z-index: 1;
+      margin-top: 12px;
+      border-top: 1px solid var(--land-line);
+      border-bottom: 1px solid var(--land-line);
+      background: color-mix(in srgb, var(--land-panel) 84%, transparent);
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .ticker-track {
+      display: inline-flex;
+      gap: 28px;
+      padding: 10px 0;
+      min-width: 200%;
+      animation: marquee 24s linear infinite;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--land-ink-soft);
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    .ticker-track span::before {
+      content: "// ";
+      color: color-mix(in srgb, var(--brand) 65%, transparent);
+    }
+
+    .section {
+      position: relative;
+      z-index: 1;
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 18px 20px 8px;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .section h2 {
+      margin: 0;
+      font-size: clamp(1.2rem, 2.2vw, 1.62rem);
+      letter-spacing: -0.02em;
+    }
+
+    .section p { margin: 0; color: var(--land-ink-soft); font-size: 14px; }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .metric,
+    .card,
+    .panel {
+      border: 1px solid var(--land-line);
+      border-radius: 16px;
+      background: color-mix(in srgb, var(--land-panel) 92%, transparent);
+      transition: .24s cubic-bezier(.16,1,.3,1);
+    }
+
+    .metric { padding: 12px; min-height: 86px; }
+    .metric b { display: block; font-size: 19px; margin-bottom: 3px; }
+    .metric span { font-size: 12px; color: var(--land-ink-soft); }
+
+    .metric:hover,
+    .card:hover,
+    .panel:hover {
+      transform: translateY(-4px);
+      border-color: color-mix(in srgb, var(--brand) 48%, var(--land-line));
+      box-shadow: 0 16px 32px rgba(2,6,23,.22);
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .card { padding: 14px; }
+    .card h3 { margin: 0 0 6px; font-size: 1rem; }
+    .card p { margin: 0; font-size: 13px; color: var(--land-ink-soft); line-height: 1.6; }
+
+    .sticky-stage {
+      display: grid;
+      grid-template-columns: .42fr .58fr;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .sticky-title {
+      position: sticky;
+      top: 92px;
+      border: 1px solid var(--land-line);
+      border-radius: 16px;
+      background: color-mix(in srgb, var(--land-panel) 92%, transparent);
+      padding: 14px;
+    }
+
+    .sticky-title h3 { margin: 0 0 8px; font-size: 1.06rem; }
+    .sticky-title p { margin: 0; color: var(--land-ink-soft); font-size: 13px; line-height: 1.6; }
+
+    .flow-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .flow-item {
+      border: 1px solid var(--land-line);
+      border-radius: 14px;
+      background: color-mix(in srgb, var(--land-panel) 92%, transparent);
+      padding: 12px;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 10px;
+      align-items: start;
+      transition: .24s cubic-bezier(.16,1,.3,1);
+    }
+
+    .flow-item:hover { transform: translateX(3px); border-color: color-mix(in srgb, var(--brand2) 45%, var(--land-line)); }
+
+    .flow-no {
+      width: 26px;
+      height: 26px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--brand), var(--brand2));
+    }
+
+    .flow-item h4 { margin: 0 0 4px; font-size: .95rem; }
+    .flow-item p { margin: 0; color: var(--land-ink-soft); font-size: 13px; line-height: 1.55; }
+
+    .quickstart {
+      display: grid;
+      grid-template-columns: .95fr 1.05fr;
+      gap: 10px;
+    }
+
+    .panel { padding: 12px; }
+    .panel h4 {
+      margin: 0 0 8px;
+      font-size: 13px;
+      letter-spacing: .03em;
+      text-transform: uppercase;
+      font-family: var(--land-mono);
+    }
+
+    .list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 8px;
+    }
+
+    .list li {
+      border: 1px dashed var(--land-line);
+      border-radius: 10px;
+      padding: 8px 9px;
+      color: var(--land-ink-soft);
+      font-size: 13px;
+      background: color-mix(in srgb, var(--brand) 8%, transparent);
+    }
+
+    .codeblock {
+      margin: 0;
+      padding: 12px;
+      border: 1px solid rgba(148,163,184,.26);
+      border-radius: 12px;
+      background: var(--land-console);
+      color: var(--land-code);
+      font-family: var(--land-mono);
+      font-size: 12.6px;
+      line-height: 1.62;
+      white-space: pre-wrap;
+      overflow-x: auto;
+    }
+
+    .faq {
+      display: grid;
+      gap: 10px;
+    }
+
+    .faq details {
+      border: 1px solid var(--land-line);
+      border-radius: 12px;
+      background: color-mix(in srgb, var(--land-panel) 92%, transparent);
+      padding: 10px 12px;
+    }
+
+    .faq summary { cursor: pointer; font-weight: 700; }
+    .faq p { margin: 8px 0 2px; color: var(--land-ink-soft); font-size: 13px; line-height: 1.6; }
+
+    .final-cta {
+      max-width: 1240px;
+      margin: 10px auto 0;
+      padding: 8px 20px 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta-wrap {
+      border: 1px solid var(--land-line);
+      border-radius: 18px;
+      background:
+        radial-gradient(260px 130px at 8% 18%, color-mix(in srgb, var(--brand2) 26%, transparent), transparent 70%),
+        radial-gradient(260px 130px at 92% 82%, color-mix(in srgb, var(--brand) 24%, transparent), transparent 70%),
+        color-mix(in srgb, var(--land-panel) 95%, transparent);
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .cta-wrap h3 { margin: 0 0 6px; font-size: clamp(1.12rem, 2.2vw, 1.55rem); }
+    .cta-wrap p { margin: 0; color: var(--land-ink-soft); font-size: 14px; }
+
+    .cta-actions { display: inline-flex; gap: 9px; flex-wrap: wrap; }
+
+    .footer {
+      margin-top: 10px;
+      border-top: 1px solid var(--land-line);
+      padding: 14px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      color: var(--land-ink-soft);
+      font-size: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .footer-links { display: inline-flex; gap: 8px; flex-wrap: wrap; }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(15px);
+      transition: .55s cubic-bezier(.16,1,.3,1);
+    }
+
+    .reveal.show { opacity: 1; transform: translateY(0); }
+
+    @keyframes gridSlide {
+      from { transform: translateY(0); }
+      to { transform: translateY(46px); }
+    }
+
+    @keyframes auroraFloat {
+      0% { transform: translateY(0) translateX(0); }
+      50% { transform: translateY(14px) translateX(18px); }
+      100% { transform: translateY(-8px) translateX(-10px); }
+    }
+
+    @keyframes pulseDot {
+      0%,100% { transform: scale(1); }
+      50% { transform: scale(1.18); }
+    }
+
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    @keyframes riseIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes spin { from { transform: rotate(0); } to { transform: rotate(360deg); } }
+
+    @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: .36; } }
+
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    @media (max-width: 1020px) {
+      .hero,
+      .sticky-stage,
+      .quickstart { grid-template-columns: 1fr; }
+      .metric-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .grid-3 { grid-template-columns: 1fr 1fr; }
+      .sticky-title { position: static; }
+    }
+
+    @media (max-width: 720px) {
+      .query-box { grid-template-columns: 1fr; }
+      .metric-grid,
+      .grid-3 { grid-template-columns: 1fr; }
+      .chip.primary,
+      .query-box .chip.primary { width: 100%; }
+      .top-nav { align-items: flex-start; flex-direction: column; }
+      .hero-copy { padding: 14px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="grid-overlay" aria-hidden="true"></div>
+  <div class="aurora" aria-hidden="true"></div>
+
+  <nav class="top-nav">
+    <a class="brand" href="landing.html" aria-label="CampusCart landing home">
+      <span class="brand-dot" aria-hidden="true"></span>
+      CampusCart Platform
+    </a>
+
+    <div class="top-links">
+      <a class="chip" href="#overview">Overview</a>
+      <a class="chip" href="#capabilities">Capabilities</a>
+      <a class="chip" href="#flow">Flow</a>
+      <a class="chip" href="#quickstart">Quickstart</a>
+      <a class="chip" href="#faq">FAQ</a>
+      <a class="chip" href="login.html">Sign In</a>
+      <a class="chip primary" id="enterMarketplaceBtn" href="login.html">Enter CampusCart</a>
+      <button class="chip-btn" id="themeToggle" type="button" aria-label="Toggle theme">Theme</button>
+    </div>
+  </nav>
+
+  <section class="hero" id="overview">
+    <div class="hero-copy">
+      <span class="hero-badge"><span class="pinwheel" aria-hidden="true"></span> Realtime campus index active</span>
+      <h1>Find, verify, and exchange campus essentials with precision.</h1>
+      <p>A full-marketplace workflow for student life: rapid search intent, reliable seller context, and clear action flow from discovery to pickup.</p>
+
+      <div class="hero-actions">
+        <a class="chip primary" href="signup.html">Create Student Account</a>
+        <a class="chip" href="sell.html">List Your First Item</a>
+      </div>
+
+      <div class="query-box">
+        <input id="heroSearchInput" type="text" placeholder="Try: first year chemistry notes under 200" autocomplete="off" />
+        <button id="searchBtn" class="chip primary" type="button">Search Marketplace</button>
+      </div>
+    </div>
+
+    <div class="hero-console" aria-label="Live runtime console">
+      <div class="console-head">
+        <span class="dots"><i></i><i></i><i></i></span>
+        <span class="console-title">campuscart.runtime</span>
+      </div>
+      <pre><span class="k">POST</span> <span class="s">/v1/query</span>
+{
+  <span class="k">"campus"</span>: <span class="v">"main"</span>,
+  <span class="k">"intent"</span>: <span class="v">"lab apron"</span>,
+  <span class="k">"maxPrice"</span>: <span class="v">300</span>,
+  <span class="k">"sort"</span>: <span class="v">"relevance"</span>
+}
+
+<span class="k">200</span> <span class="s">OK</span>
+<span class="k">result_count</span>: <span class="v">14</span>
+<span class="k">latency_ms</span>: <span class="v">128</span>
+<span class="k">status</span>: <span class="v">ready</span></pre>
+      <div class="console-foot"><i></i> stream synchronized</div>
+    </div>
+  </section>
+
+  <section class="ticker" aria-label="Platform highlights">
+    <div class="ticker-track">
+      <span>intent search</span>
+      <span>seller trust</span>
+      <span>wishlist workflow</span>
+      <span>campus-first exchange</span>
+      <span>category filters</span>
+      <span>price awareness</span>
+      <span>detail-first decisions</span>
+      <span>intent search</span>
+      <span>seller trust</span>
+      <span>wishlist workflow</span>
+      <span>campus-first exchange</span>
+      <span>category filters</span>
+      <span>price awareness</span>
+      <span>detail-first decisions</span>
+    </div>
+  </section>
+
+  <section class="section reveal">
+    <div class="metric-grid">
+      <article class="metric"><b>128ms</b><span>average query response</span></article>
+      <article class="metric"><b>4 Types</b><span>notes, aprons, stationery, others</span></article>
+      <article class="metric"><b>1 Flow</b><span>discover -> verify -> connect</span></article>
+      <article class="metric"><b>Theme Aware</b><span>light and dark readability</span></article>
+    </div>
+  </section>
+
+  <section class="section reveal" id="capabilities">
+    <div class="section-head">
+      <h2>Core Capabilities</h2>
+      <p>High-signal features tuned for student decision speed.</p>
+    </div>
+
+    <div class="grid-3">
+      <article class="card">
+        <h3>Intent Search</h3>
+        <p>Type what you need directly and reduce browsing noise with focused matching behavior.</p>
+      </article>
+      <article class="card">
+        <h3>Seller Context</h3>
+        <p>Listing details surface seller identity and contact at the right stage for confident exchange.</p>
+      </article>
+      <article class="card">
+        <h3>Wishlist Path</h3>
+        <p>Save candidates now, revisit later, compare better, and buy at the right price point.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="section reveal" id="flow">
+    <div class="section-head">
+      <h2>Sticky Flow Narrative</h2>
+      <p>A unique scroll behavior that keeps context while details move.</p>
+    </div>
+
+    <div class="sticky-stage">
+      <aside class="sticky-title">
+        <h3>From Search to Pickup</h3>
+        <p>This block stays in view while step cards progress, creating a platform-style onboarding narrative.</p>
+      </aside>
+
+      <div class="flow-list">
+        <article class="flow-item">
+          <span class="flow-no">01</span>
+          <div>
+            <h4>Start with intent</h4>
+            <p>Users describe need directly and narrow results with category and price constraints.</p>
+          </div>
+        </article>
+
+        <article class="flow-item">
+          <span class="flow-no">02</span>
+          <div>
+            <h4>Verify context</h4>
+            <p>Product details expose seller data and essential context before any exchange decision.</p>
+          </div>
+        </article>
+
+        <article class="flow-item">
+          <span class="flow-no">03</span>
+          <div>
+            <h4>Plan purchase timing</h4>
+            <p>Wishlist pathway supports delayed decisions and compares options across multiple days.</p>
+          </div>
+        </article>
+
+        <article class="flow-item">
+          <span class="flow-no">04</span>
+          <div>
+            <h4>Complete exchange</h4>
+            <p>Student-to-student coordination remains lightweight, fast, and campus-oriented.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section reveal" id="quickstart">
+    <div class="section-head">
+      <h2>Quickstart Track</h2>
+      <p>A presentable onboarding flow for first-time users.</p>
+    </div>
+
+    <div class="quickstart">
+      <article class="panel">
+        <h4>User Flow</h4>
+        <ul class="list">
+          <li>Sign in with student account</li>
+          <li>Search with category and price context</li>
+          <li>Open product details and review seller info</li>
+          <li>Save to wishlist or contact seller directly</li>
+        </ul>
+      </article>
+
+      <article class="panel">
+        <h4>Query Example</h4>
+        <pre class="codeblock">GET /v1/listings?category=Notes&maxPrice=250
+
+Response:
+{
+  "total": 12,
+  "items": [
+    {"title": "Physics Notes", "price": 180},
+    {"title": "Chemistry Record", "price": 120}
+  ]
+}</pre>
+      </article>
+    </div>
+  </section>
+
+  <section class="section reveal" id="faq">
+    <div class="section-head">
+      <h2>FAQ</h2>
+      <p>Frequently asked points from first-time users.</p>
+    </div>
+
+    <div class="faq">
+      <details>
+        <summary>Can I search first and login later?</summary>
+        <p>Yes. Query intent is stored and automatically applied after sign in and marketplace entry.</p>
+      </details>
+      <details>
+        <summary>How do I know who is selling an item?</summary>
+        <p>Seller details appear in product detail view, enabling immediate verification and contact.</p>
+      </details>
+      <details>
+        <summary>What if I am not ready to buy now?</summary>
+        <p>Wishlist helps track options over time before making a final purchase decision.</p>
+      </details>
+    </div>
+  </section>
+
+  <section class="final-cta reveal">
+    <div class="cta-wrap">
+      <div>
+        <h3>Ready to make your semester workflow lighter?</h3>
+        <p>Start with one search, one listing, or one saved item and build your own campus exchange rhythm.</p>
+      </div>
+      <div class="cta-actions">
+        <a class="chip primary" href="signup.html">Create Account</a>
+        <a class="chip" href="sell.html">List Item</a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <span>CampusCart Platform 2026</span>
+    <span class="footer-links">
+      <a class="chip" href="#overview">Overview</a>
+      <a class="chip" href="login.html">Sign In</a>
+      <a class="chip" href="signup.html">Create Account</a>
+    </span>
+  </footer>
+
+  <script src="theme.js"></script>
+  <script src="api.js"></script>
+  <script>
+    (() => {
+      const loggedIn = localStorage.getItem("loggedIn") === "true";
+      const enterBtn = document.getElementById("enterMarketplaceBtn");
+
+      if (enterBtn) {
+        enterBtn.href = loggedIn ? "index.html" : "login.html";
+        enterBtn.textContent = loggedIn ? "Open Marketplace" : "Enter CampusCart";
+      }
+
+      const runSearch = () => {
+        const query = (document.getElementById("heroSearchInput")?.value || "").trim();
+        if (query) localStorage.setItem("landingQuery", query);
+
+        if (!loggedIn) {
+          window.location.href = "login.html";
+          return;
+        }
+
+        window.location.href = "index.html";
+      };
+
+      document.getElementById("searchBtn")?.addEventListener("click", runSearch);
+      document.getElementById("heroSearchInput")?.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") runSearch();
+      });
+
+      const nodes = Array.from(document.querySelectorAll(".reveal"));
+      if ("IntersectionObserver" in window) {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("show");
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.16 });
+
+        nodes.forEach((n) => observer.observe(n));
+      } else {
+        nodes.forEach((n) => n.classList.add("show"));
+      }
+    })();
+  </script>
+</body>
+</html>

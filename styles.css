@@ -558,6 +558,26 @@ form select:focus{
 }
 .password-wrap input{ flex: 1; }
 
+.strength-wrap{
+  margin-top: 6px;
+}
+
+.strength-bar{
+  width: 100%;
+  height: 8px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--border) 90%, transparent);
+  overflow: hidden;
+}
+
+.strength-bar span{
+  display: block;
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #ef4444, #f59e0b, #22c55e);
+  transition: width .25s ease;
+}
+
 /* ====== AUTH PAGES ====== */
 .auth-body{
   background:
@@ -660,9 +680,63 @@ footer{
   color: color-mix(in srgb, var(--text) 72%, transparent);
 }
 
+/* ====== GLOBAL UI MOTION ====== */
+@keyframes uiFadeInDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes uiFadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes uiPopIn {
+  from { opacity: 0; transform: translateY(10px) scale(.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.navbar{ animation: uiFadeInDown .45s cubic-bezier(.16,1,.3,1); }
+.hero-copy,
+.hero-card,
+.auth-card,
+.panel,
+.product-container{
+  animation: uiPopIn .5s cubic-bezier(.16,1,.3,1);
+}
+
+.category,
+.filters select,
+.filters input,
+.btn,
+.nav-links a,
+.icon-btn,
+.seller-pill{
+  transition: transform .2s cubic-bezier(.16,1,.3,1), box-shadow .2s cubic-bezier(.16,1,.3,1), background .2s ease, border-color .2s ease;
+}
+
+.product-grid .card{ animation: uiFadeUp .4s cubic-bezier(.16,1,.3,1) both; }
+.product-grid .card:nth-child(1){ animation-delay:.03s; }
+.product-grid .card:nth-child(2){ animation-delay:.07s; }
+.product-grid .card:nth-child(3){ animation-delay:.11s; }
+.product-grid .card:nth-child(4){ animation-delay:.15s; }
+.product-grid .card:nth-child(5){ animation-delay:.19s; }
+.product-grid .card:nth-child(6){ animation-delay:.23s; }
+.product-grid .card:nth-child(7){ animation-delay:.27s; }
+.product-grid .card:nth-child(8){ animation-delay:.31s; }
+
+.auth-form .field,
+.form .field{ animation: uiFadeUp .45s cubic-bezier(.16,1,.3,1) both; }
+.auth-form .field:nth-child(1),
+.form .field:nth-child(1){ animation-delay:.04s; }
+.auth-form .field:nth-child(2),
+.form .field:nth-child(2){ animation-delay:.08s; }
+.auth-form .field:nth-child(3),
+.form .field:nth-child(3){ animation-delay:.12s; }
+
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce){
-  *{ scroll-behavior:auto !important; transition:none !important; }
+  *{ scroll-behavior:auto !important; transition:none !important; animation:none !important; }
 }
 
 /* ADD THESE EXTRA STYLES AT THE END (already safe for both themes) */
@@ -705,4 +779,500 @@ footer{
   border: 1px solid color-mix(in srgb, var(--border) 100%, transparent);
   font-weight: 700;
   font-size: 13px;
+}
+
+/* ====== PAGE-SPECIFIC MOTION SYSTEM ====== */
+@keyframes sheenSweep {
+  from { transform: translateX(-120%); }
+  to { transform: translateX(140%); }
+}
+
+@keyframes floatY {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes glowPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(37,99,235,.0); }
+  50% { box-shadow: 0 0 0 8px rgba(37,99,235,.12); }
+}
+
+@keyframes subtleSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.page-home .hero-copy,
+.page-home .hero-card,
+.page-sell .panel,
+.page-profile .panel,
+.page-product .product-container,
+.page-wishlist .products,
+.auth-login .auth-card,
+.auth-signup .auth-card{
+  position: relative;
+  overflow: hidden;
+}
+
+.page-home .hero-copy::after,
+.page-sell .panel::after,
+.page-profile .panel::after,
+.page-product .product-container::after,
+.page-wishlist .products::after,
+.auth-login .auth-card::after,
+.auth-signup .auth-card::after{
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 30%;
+  height: 100%;
+  background: linear-gradient(110deg, transparent 0%, rgba(255,255,255,.26) 50%, transparent 100%);
+  opacity: .25;
+  pointer-events: none;
+  animation: sheenSweep 6.8s linear infinite;
+}
+
+[data-theme="dark"] .page-home .hero-copy::after,
+[data-theme="dark"] .page-sell .panel::after,
+[data-theme="dark"] .page-profile .panel::after,
+[data-theme="dark"] .page-product .product-container::after,
+[data-theme="dark"] .page-wishlist .products::after,
+[data-theme="dark"] .auth-login .auth-card::after,
+[data-theme="dark"] .auth-signup .auth-card::after{
+  background: linear-gradient(110deg, transparent 0%, rgba(148,163,184,.20) 50%, transparent 100%);
+}
+
+.page-home .category:nth-child(odd){
+  animation: floatY 3.6s ease-in-out infinite;
+}
+
+.page-home .category:nth-child(even){
+  animation: floatY 4.2s ease-in-out infinite reverse;
+}
+
+.page-home .hero-card{
+  animation: uiPopIn .5s cubic-bezier(.16,1,.3,1), floatY 4.8s ease-in-out infinite;
+}
+
+.page-sell .panel{
+  border-color: color-mix(in srgb, var(--brand) 22%, var(--border));
+}
+
+.page-sell .form .field input:focus,
+.page-sell .form .field select:focus{
+  animation: glowPulse 1.2s ease;
+}
+
+.page-profile #myListings .card:nth-child(3n + 1){
+  animation-delay: .04s;
+}
+
+.page-profile #myListings .card:nth-child(3n + 2){
+  animation-delay: .1s;
+}
+
+.page-profile #myListings .card:nth-child(3n + 3){
+  animation-delay: .16s;
+}
+
+.page-product .product-image{
+  position: relative;
+}
+
+.page-product .product-image::before{
+  content: "";
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  right: -30px;
+  top: -30px;
+  border-radius: 999px;
+  border: 1px dashed color-mix(in srgb, var(--brand) 34%, var(--border));
+  animation: subtleSpin 16s linear infinite;
+}
+
+.page-product .seller-pill{
+  animation: uiFadeUp .45s cubic-bezier(.16,1,.3,1) both;
+}
+
+.page-product .seller-pill:nth-child(1){ animation-delay: .04s; }
+.page-product .seller-pill:nth-child(2){ animation-delay: .08s; }
+.page-product .seller-pill:nth-child(3){ animation-delay: .12s; }
+
+.page-wishlist .card .delete-btn{
+  transition: transform .2s cubic-bezier(.16,1,.3,1), background .2s ease, border-color .2s ease;
+}
+
+.page-wishlist .card .delete-btn:hover{
+  transform: translateY(-1px);
+}
+
+.auth-login .auth-card,
+.auth-signup .auth-card{
+  border-color: color-mix(in srgb, var(--brand2) 22%, var(--border));
+}
+
+.auth-login .navbar .logo-mark,
+.auth-signup .navbar .logo-mark{
+  animation: floatY 3.2s ease-in-out infinite;
+}
+
+/* ====== SUBMISSION POLISH: STRONGER PAGE STYLING + MOTION ====== */
+@keyframes gradientDrift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes borderGlow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(37,99,235,.0); }
+  50% { box-shadow: 0 0 0 10px rgba(37,99,235,.16); }
+}
+
+@keyframes cardLift {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-5px) scale(1.01); }
+}
+
+@keyframes softOrbit {
+  0% { transform: rotate(0deg) translateX(0); }
+  50% { transform: rotate(180deg) translateX(6px); }
+  100% { transform: rotate(360deg) translateX(0); }
+}
+
+.page-home,
+.page-sell,
+.page-profile,
+.page-wishlist,
+.page-product,
+.auth-login,
+.auth-signup{
+  position: relative;
+}
+
+.page-home::before,
+.page-sell::before,
+.page-profile::before,
+.page-wishlist::before,
+.page-product::before,
+.auth-login::before,
+.auth-signup::before{
+  content: "";
+  position: fixed;
+  inset: -20% -10% auto -10%;
+  height: 44vh;
+  pointer-events: none;
+  z-index: -1;
+  opacity: .65;
+  background:
+    radial-gradient(320px 180px at 12% 36%, color-mix(in srgb, var(--brand2) 30%, transparent), transparent 70%),
+    radial-gradient(360px 200px at 82% 20%, color-mix(in srgb, var(--brand) 28%, transparent), transparent 72%),
+    radial-gradient(280px 160px at 55% 65%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 72%);
+  filter: blur(10px);
+  animation: floatY 8s ease-in-out infinite alternate;
+}
+
+.page-home .hero-copy{
+  border: 1px solid color-mix(in srgb, var(--brand) 35%, var(--border));
+  background:
+    linear-gradient(130deg, color-mix(in srgb, var(--surface) 88%, transparent), color-mix(in srgb, var(--surface2) 96%, transparent));
+}
+
+.page-home .hero h2{
+  background: linear-gradient(90deg, var(--text), color-mix(in srgb, var(--brand) 55%, var(--text)), color-mix(in srgb, var(--brand2) 45%, var(--text)));
+  background-size: 220% 220%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: gradientDrift 5.5s ease infinite;
+}
+
+.page-home .hero-stats .stat{
+  border: 1px solid color-mix(in srgb, var(--brand) 26%, rgba(255,255,255,.12));
+  animation: cardLift 5.6s ease-in-out infinite;
+}
+
+.page-home .hero-stats .stat:nth-child(2){ animation-delay: .35s; }
+.page-home .hero-stats .stat:nth-child(3){ animation-delay: .7s; }
+
+.page-home .category{
+  border-color: color-mix(in srgb, var(--brand) 24%, var(--border));
+  box-shadow: 0 14px 30px rgba(2,6,23,.12);
+}
+
+.page-home .product-grid .card{
+  border-color: color-mix(in srgb, var(--brand2) 18%, var(--border));
+}
+
+.page-home .product-grid .card:hover{
+  transform: translateY(-9px) scale(1.015);
+  box-shadow: 0 28px 70px rgba(2,6,23,.18);
+}
+
+.page-home .wishlist-icon.active{
+  animation: glowPulse 1.15s ease infinite;
+}
+
+.page-sell .panel,
+.page-profile .panel,
+.page-wishlist .products,
+.page-product .product-container,
+.auth-login .auth-card,
+.auth-signup .auth-card{
+  border-width: 1px;
+  border-color: color-mix(in srgb, var(--brand) 28%, var(--border));
+  box-shadow: 0 20px 46px rgba(2,6,23,.16);
+}
+
+.page-sell .panel{
+  background:
+    radial-gradient(260px 140px at 8% 0%, color-mix(in srgb, var(--brand2) 16%, transparent), transparent 70%),
+    color-mix(in srgb, var(--surface) 96%, transparent);
+}
+
+.page-sell .panel-title,
+.page-profile .panel-title,
+.page-wishlist .section-head h2,
+.page-product .product-info h2{
+  letter-spacing: .2px;
+}
+
+.page-sell .form-actions .btn-primary,
+.page-profile .btn-secondary,
+.page-product .contact-btn,
+.auth-login .btn-primary,
+.auth-signup .btn-primary{
+  position: relative;
+  isolation: isolate;
+}
+
+.page-sell .form-actions .btn-primary::after,
+.page-profile .btn-secondary::after,
+.page-product .contact-btn::after,
+.auth-login .btn-primary::after,
+.auth-signup .btn-primary::after{
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  border: 1px solid color-mix(in srgb, var(--brand) 40%, transparent);
+  z-index: -1;
+  animation: borderGlow 2s ease-in-out infinite;
+}
+
+.page-sell .form .field{
+  padding: 8px;
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--surface2) 75%, transparent);
+  border: 1px solid color-mix(in srgb, var(--border) 100%, transparent);
+}
+
+.page-sell .form .field:focus-within{
+  border-color: color-mix(in srgb, var(--brand2) 38%, var(--border));
+  transform: translateY(-1px);
+}
+
+.page-profile .panel{
+  background:
+    radial-gradient(280px 140px at 92% 0%, color-mix(in srgb, var(--brand) 18%, transparent), transparent 70%),
+    color-mix(in srgb, var(--surface) 96%, transparent);
+}
+
+.page-profile #myListings .card{
+  border-color: color-mix(in srgb, var(--brand2) 20%, var(--border));
+}
+
+.page-profile #myListings .card:hover{
+  transform: translateY(-8px) scale(1.012);
+}
+
+.page-wishlist .products{
+  border-radius: var(--radius2);
+  border: 1px solid color-mix(in srgb, var(--brand2) 26%, var(--border));
+  background:
+    radial-gradient(320px 180px at 5% 0%, color-mix(in srgb, var(--brand2) 18%, transparent), transparent 72%),
+    color-mix(in srgb, var(--surface) 94%, transparent);
+  padding: 20px;
+}
+
+.page-wishlist .card{
+  border-color: color-mix(in srgb, var(--brand) 22%, var(--border));
+}
+
+.page-wishlist .card .delete-btn{
+  font-weight: 900;
+}
+
+.page-product .product-container{
+  background:
+    radial-gradient(260px 140px at 95% 0%, color-mix(in srgb, var(--brand2) 18%, transparent), transparent 72%),
+    color-mix(in srgb, var(--surface) 96%, transparent);
+}
+
+.page-product .product-image img{
+  transition: transform .45s cubic-bezier(.16,1,.3,1), box-shadow .3s ease;
+}
+
+.page-product .product-image:hover img{
+  transform: scale(1.03);
+  box-shadow: 0 20px 50px rgba(2,6,23,.22);
+}
+
+.page-product .seller-box{
+  border-color: color-mix(in srgb, var(--brand) 30%, var(--border));
+}
+
+.page-product .seller-pill{
+  border-color: color-mix(in srgb, var(--brand2) 34%, var(--border));
+}
+
+.page-product .contact-btn{
+  margin-top: 10px;
+}
+
+.auth-login .auth-card,
+.auth-signup .auth-card{
+  backdrop-filter: blur(12px);
+}
+
+.auth-login .auth-head h2,
+.auth-signup .auth-head h2{
+  background: linear-gradient(90deg, var(--text), color-mix(in srgb, var(--brand) 58%, var(--text)));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.auth-login .navbar,
+.auth-signup .navbar{
+  border-bottom-color: color-mix(in srgb, var(--brand) 24%, var(--border));
+}
+
+.auth-login .field,
+.auth-signup .field{
+  background: color-mix(in srgb, var(--surface2) 60%, transparent);
+  border-radius: 12px;
+  padding: 8px;
+  border: 1px solid color-mix(in srgb, var(--brand2) 20%, var(--border));
+}
+
+.auth-login .password-wrap,
+.auth-signup .password-wrap{
+  border-radius: 10px;
+}
+
+.page-home .logo-mark,
+.page-sell .logo-mark,
+.page-profile .logo-mark,
+.page-wishlist .logo-mark,
+.page-product .logo-mark{
+  position: relative;
+}
+
+.page-home .logo-mark::after,
+.page-sell .logo-mark::after,
+.page-profile .logo-mark::after,
+.page-wishlist .logo-mark::after,
+.page-product .logo-mark::after{
+  content: "";
+  position: absolute;
+  inset: -8px;
+  border-radius: 14px;
+  border: 1px dashed color-mix(in srgb, var(--brand) 38%, transparent);
+  animation: softOrbit 8s linear infinite;
+}
+
+@media (max-width: 920px){
+  .page-home .hero h2{ font-size: 28px; }
+  .page-wishlist .products{ padding: 16px; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .page-home::before,
+  .page-sell::before,
+  .page-profile::before,
+  .page-wishlist::before,
+  .page-product::before,
+  .auth-login::before,
+  .auth-signup::before,
+  .page-home .hero h2,
+  .page-home .hero-stats .stat,
+  .page-home .wishlist-icon.active,
+  .page-home .logo-mark::after,
+  .page-sell .logo-mark::after,
+  .page-profile .logo-mark::after,
+  .page-wishlist .logo-mark::after,
+  .page-product .logo-mark::after,
+  .page-sell .form-actions .btn-primary::after,
+  .page-profile .btn-secondary::after,
+  .page-product .contact-btn::after,
+  .auth-login .btn-primary::after,
+  .auth-signup .btn-primary::after{
+    animation: none !important;
+  }
+}
+
+/* ====== PERFORMANCE TUNING: NON-LANDING PAGES ====== */
+.page-sell::before,
+.page-profile::before,
+.page-wishlist::before,
+.page-product::before,
+.auth-login::before,
+.auth-signup::before{
+  animation: none;
+  filter: blur(8px);
+  opacity: .32;
+}
+
+.page-sell .panel::after,
+.page-profile .panel::after,
+.page-product .product-container::after,
+.page-wishlist .products::after,
+.auth-login .auth-card::after,
+.auth-signup .auth-card::after{
+  animation: none;
+  opacity: .08;
+}
+
+.page-sell .logo-mark::after,
+.page-profile .logo-mark::after,
+.page-wishlist .logo-mark::after,
+.page-product .logo-mark::after,
+.auth-login .navbar .logo-mark,
+.auth-signup .navbar .logo-mark,
+.page-product .product-image::before,
+.page-home .wishlist-icon.active{
+  animation: none;
+}
+
+.page-sell .form-actions .btn-primary::after,
+.page-profile .btn-secondary::after,
+.page-product .contact-btn::after,
+.auth-login .btn-primary::after,
+.auth-signup .btn-primary::after{
+  animation: none;
+  opacity: .42;
+}
+
+.page-sell .form .field input:focus,
+.page-sell .form .field select:focus{
+  animation: none;
+}
+
+.page-sell .panel,
+.page-profile .panel,
+.page-wishlist .products,
+.page-product .product-container,
+.auth-login .auth-card,
+.auth-signup .auth-card{
+  animation: uiPopIn .34s ease-out;
+}
+
+.page-profile #myListings .card,
+.page-wishlist .product-grid .card,
+.page-product .seller-pill,
+.auth-login .auth-form .field,
+.auth-signup .auth-form .field{
+  animation-duration: .28s;
 }

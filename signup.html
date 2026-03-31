@@ -9,17 +9,18 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="styles.css" />
 </head>
-<body class="auth-body">
+<body class="auth-body auth-signup">
   <nav class="navbar">
     <div class="nav-left">
-      <a class="brand" href="index.html" aria-label="CampusCart Home">
+      <a class="brand" href="landing.html" aria-label="CampusCart Home">
         <span class="logo-mark" aria-hidden="true"></span>
         <h1 class="logo">CampusCart</h1>
       </a>
     </div>
     <div class="nav-links">
+      <a href="landing.html">Back to Landing</a>
       <button id="themeToggle" class="btn btn-ghost" type="button" aria-label="Toggle theme">🌙</button>
       <a href="login.html">Login</a>
     </div>
@@ -49,6 +50,10 @@
             <input type="password" id="password" placeholder="At least 6 characters" minlength="6" autocomplete="new-password" required />
             <button class="icon-btn" id="toggleSignupPassword" type="button" aria-label="Toggle password visibility">👁</button>
           </div>
+          <div class="strength-wrap" aria-live="polite">
+            <div class="strength-bar"><span id="passwordStrengthBar"></span></div>
+            <p class="muted small" id="passwordStrengthLabel">Strength: N/A</p>
+          </div>
         </label>
 
         <button class="btn btn-primary" type="submit">Create Account</button>
@@ -60,7 +65,8 @@
     </section>
   </main>
 
-  <script src="js/theme.js"></script>
-  <script src="js/auth.js"></script>
+  <script src="theme.js"></script>
+  <script src="api.js"></script>
+  <script src="auth.js"></script>
 </body>
 </html>

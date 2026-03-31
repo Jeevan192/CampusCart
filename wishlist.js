@@ -1,24 +1,19 @@
 (() => {
+  const api = window.CampusCartAPI;
+  if (!api) return;
+
   const grid = document.getElementById("wishlistGrid");
   if (!grid) return;
 
-  const safeJSON = (value, fallback) => {
-    try {
-      return value ? JSON.parse(value) : fallback;
-    } catch {
-      return fallback;
+  const render = (items) => {
+    grid.innerHTML = "";
+
+    if (!items || items.length === 0) {
+      grid.innerHTML = `<div class="panel" style="grid-column:1/-1;"><p class="muted" style="margin:0;">No items in wishlist</p></div>`;
+      return;
     }
-  };
 
-  const wishlist = safeJSON(localStorage.getItem("wishlist"), []);
-  grid.innerHTML = "";
-
-  if (!wishlist || wishlist.length === 0) {
-    grid.innerHTML = `<div class="panel" style="grid-column:1/-1;"><p class="muted" style="margin:0;">No items in wishlist</p></div>`;
-    return;
-  }
-
-  wishlist.forEach((p) => {
+    items.forEach((p) => {
     const card = document.createElement("div");
     card.className = "card";
 
@@ -35,24 +30,34 @@
       <button class="delete-btn" type="button">Remove</button>
     `;
 
-    card.addEventListener("click", () => {
-      localStorage.setItem("selectedProduct", JSON.stringify(p));
+      card.addEventListener("click", () => {
+      localStorage.setItem("selectedProductId", String(p._id));
       window.location.href = "product.html";
     });
 
-    card.querySelector(".delete-btn").addEventListener("click", (e) => {
+      card.querySelector(".delete-btn").addEventListener("click", async (e) => {
       e.stopPropagation();
 
-      const key = String(p.title || "").trim().toLowerCase();
-      let updated = wishlist.filter((x) => String(x.title || "").trim().toLowerCase() !== key);
-      localStorage.setItem("wishlist", JSON.stringify(updated));
-      card.remove();
-
-      if (updated.length === 0) {
-        grid.innerHTML = `<div class="panel" style="grid-column:1/-1;"><p class="muted" style="margin:0;">No items in wishlist</p></div>`;
+        try {
+          await api.request(`/wishlist/${p._id}/toggle`, { method: "POST" });
+          const next = items.filter((x) => String(x._id) !== String(p._id));
+          render(next);
+        } catch (error) {
+          alert(error.message || "Could not update wishlist");
+        }
       }
-    });
+    );
 
-    grid.appendChild(card);
-  });
+      grid.appendChild(card);
+    });
+  };
+
+  (async () => {
+    try {
+      const response = await api.request("/wishlist");
+      render(response.items || []);
+    } catch (error) {
+      grid.innerHTML = `<div class="panel" style="grid-column:1/-1;"><p class="muted" style="margin:0;">${error.message || "Could not load wishlist"}</p></div>`;
+    }
+  })();
 })();
